@@ -111,6 +111,8 @@ type (
 		FetchFragment []byte
 		// The SQL LIMIT BY clause fragment(DEFAULT=[]byte(" LIMIT "))
 		LimitFragment []byte
+		// The SQL LIMIT BY end clause fragment(DEFAULT=[]byte())
+		LimitEndFragment []byte
 		// The SQL OFFSET BY clause fragment(DEFAULT=[]byte(" OFFSET "))
 		OffsetFragment []byte
 		// The SQL FOR UPDATE fragment(DEFAULT=[]byte(" FOR UPDATE "))
@@ -133,6 +135,10 @@ type (
 		LateralFragment []byte
 		// The quote rune to use when quoting identifiers(DEFAULT='"')
 		QuoteRune rune
+		// Whether or not to use the QuoteRune for identifiers (DEFAULT=true)
+		QuoteIdentifiers bool
+		// Whether or not to upcase quoted QuoteIdentifiers (DEFAULT=false)
+		UppercaseIdentifiers bool
 		// The NULL literal to use when interpolating nulls values (DEFAULT=[]byte("NULL"))
 		Null []byte
 		// The TRUE literal to use when interpolating bool true values (DEFAULT=[]byte("TRUE"))
@@ -489,6 +495,7 @@ func DefaultDialectOptions() *SQLDialectOptions {
 		Null:                      []byte("NULL"),
 		True:                      []byte("TRUE"),
 		False:                     []byte("FALSE"),
+		QuoteIdentifiers:          true,
 
 		PlaceHolderFragment: []byte("?"),
 		QuoteRune:           '"',

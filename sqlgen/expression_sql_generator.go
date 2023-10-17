@@ -4,6 +4,7 @@ import (
 	"database/sql/driver"
 	"reflect"
 	"strconv"
+	"strings"
 	"time"
 	"unicode/utf8"
 
@@ -219,7 +220,7 @@ func (esg *expressionSQLGenerator) placeHolderSQL(b sb.SQLBuilder, i interface{}
 // Generates creates the sql for a sub select on a Dataset
 func (esg *expressionSQLGenerator) appendableExpressionSQL(b sb.SQLBuilder, a exp.AppendableExpression) {
 	b.WriteRunes(esg.dialectOptions.LeftParenRune)
-	a.AppendSQL(b)
+	a.AppendSQL(b, esg.dialect)
 	b.WriteRunes(esg.dialectOptions.RightParenRune)
 	if a.GetAs() != nil {
 		b.Write(esg.dialectOptions.AsFragment)
@@ -235,17 +236,33 @@ func (esg *expressionSQLGenerator) identifierExpressionSQL(b sb.SQLBuilder, iden
 	}
 	schema, table, col := ident.GetSchema(), ident.GetTable(), ident.GetCol()
 	if schema != esg.dialectOptions.EmptyString {
-		b.WriteRunes(esg.dialectOptions.QuoteRune).
-			WriteStrings(schema).
-			WriteRunes(esg.dialectOptions.QuoteRune)
+		if esg.dialectOptions.QuoteIdentifiers {
+			b.WriteRunes(esg.dialectOptions.QuoteRune)
+		}
+		if esg.dialectOptions.UppercaseIdentifiers {
+			b.WriteStrings(strings.ToUpper(schema))
+		} else {
+			b.WriteStrings(schema)
+		}
+		if esg.dialectOptions.QuoteIdentifiers {
+			b.WriteRunes(esg.dialectOptions.QuoteRune)
+		}
 	}
 	if table != esg.dialectOptions.EmptyString {
 		if schema != esg.dialectOptions.EmptyString {
 			b.WriteRunes(esg.dialectOptions.PeriodRune)
 		}
-		b.WriteRunes(esg.dialectOptions.QuoteRune).
-			WriteStrings(table).
-			WriteRunes(esg.dialectOptions.QuoteRune)
+		if esg.dialectOptions.QuoteIdentifiers {
+			b.WriteRunes(esg.dialectOptions.QuoteRune)
+		}
+		if esg.dialectOptions.UppercaseIdentifiers {
+			b.WriteStrings(strings.ToUpper(table))
+		} else {
+			b.WriteStrings(table)
+		}
+		if esg.dialectOptions.QuoteIdentifiers {
+			b.WriteRunes(esg.dialectOptions.QuoteRune)
+		}
 	}
 	switch t := col.(type) {
 	case nil:
@@ -254,9 +271,17 @@ func (esg *expressionSQLGenerator) identifierExpressionSQL(b sb.SQLBuilder, iden
 			if table != esg.dialectOptions.EmptyString || schema != esg.dialectOptions.EmptyString {
 				b.WriteRunes(esg.dialectOptions.PeriodRune)
 			}
-			b.WriteRunes(esg.dialectOptions.QuoteRune).
-				WriteStrings(t).
-				WriteRunes(esg.dialectOptions.QuoteRune)
+			if esg.dialectOptions.QuoteIdentifiers {
+				b.WriteRunes(esg.dialectOptions.QuoteRune)
+			}
+			if esg.dialectOptions.UppercaseIdentifiers {
+				b.WriteStrings(strings.ToUpper(t))
+			} else {
+				b.WriteStrings(t)
+			}
+			if esg.dialectOptions.QuoteIdentifiers {
+				b.WriteRunes(esg.dialectOptions.QuoteRune)
+			}
 		}
 	case exp.LiteralExpression:
 		if table != esg.dialectOptions.EmptyString || schema != esg.dialectOptions.EmptyString {
@@ -680,10 +705,10 @@ func (esg *expressionSQLGenerator) compoundExpressionSQL(b sb.SQLBuilder, compou
 	}
 	if esg.dialectOptions.WrapCompoundsInParens {
 		b.WriteRunes(esg.dialectOptions.LeftParenRune)
-		compound.RHS().AppendSQL(b)
+		compound.RHS().AppendSQL(b, esg.dialect)
 		b.WriteRunes(esg.dialectOptions.RightParenRune)
 	} else {
-		compound.RHS().AppendSQL(b)
+		compound.RHS().AppendSQL(b, esg.dialect)
 	}
 }
 
