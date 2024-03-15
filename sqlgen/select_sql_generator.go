@@ -215,12 +215,13 @@ func (ssg *selectSQLGenerator) ForSQL(b sb.SQLBuilder, lockingClause exp.Lock) {
 	// SKIP LOCKED. There's no special syntax for it in PG, so we don't do anything for it here
 	switch lockingClause.WaitOption() {
 	case exp.Wait:
-		return
 	case exp.NoWait:
 		b.Write(ssg.DialectOptions().NowaitFragment)
 	case exp.SkipLocked:
 		b.Write(ssg.DialectOptions().SkipLockedFragment)
 	}
+
+	b.Write(ssg.DialectOptions().ForUpdateEndFragment)
 }
 
 func (ssg *selectSQLGenerator) WindowSQL(b sb.SQLBuilder, windows []exp.WindowExpression) {

@@ -90,6 +90,10 @@ func DialectOptions() *goqu.SQLDialectOptions {
 	opts.ConflictFragment = []byte("")
 	opts.ConflictDoUpdateFragment = []byte("")
 	opts.ConflictDoNothingFragment = []byte("")
+	opts.ForUpdateFragment = []byte(" WITH (UPDLOCK")
+	opts.ForUpdateEndFragment = []byte(")")
+	opts.NowaitFragment = []byte(", NOWAIT")
+	opts.SkipLockedFragment = []byte(", READPAST")
 
 	return opts
 }

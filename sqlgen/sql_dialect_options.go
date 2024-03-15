@@ -118,6 +118,8 @@ type (
 		// The SQL FOR UPDATE fragment(DEFAULT=[]byte(" FOR UPDATE "))
 		ForUpdateFragment []byte
 		// The SQL FOR NO KEY UPDATE fragment(DEFAULT=[]byte(" FOR NO KEY UPDATE "))
+		ForUpdateEndFragment []byte
+		// The SQL FOR UPDATE end fragment(DEFAULT=[]byte(""))
 		ForNoKeyUpdateFragment []byte
 		// The SQL FOR SHARE fragment(DEFAULT=[]byte(" FOR SHARE "))
 		ForShareFragment []byte
