@@ -26,6 +26,7 @@ func DialectOptions() *goqu.SQLDialectOptions {
 	opts.SurroundLimitWithParentheses = true
 
 	opts.PlaceHolderFragment = []byte(":")
+	opts.AsFragment = []byte(" ")
 	opts.QuoteIdentifiers = true
 	opts.UppercaseIdentifiers = true
 	opts.IncludePlaceholderNum = true
