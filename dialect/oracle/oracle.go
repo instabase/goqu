@@ -22,7 +22,7 @@ func DialectOptions() *goqu.SQLDialectOptions {
 	opts.SupportsWithCTE = true
 	opts.SupportsWithCTERecursive = false
 	opts.SupportsDistinctOn = false
-	opts.SupportsWindowFunction = false
+	opts.SupportsWindowFunction = true
 	opts.SurroundLimitWithParentheses = true
 
 	opts.PlaceHolderFragment = []byte(":")

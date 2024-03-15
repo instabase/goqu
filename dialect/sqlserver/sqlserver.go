@@ -20,10 +20,10 @@ func DialectOptions() *goqu.SQLDialectOptions {
 	opts.SupportsConflictUpdateWhere = false
 	opts.SupportsInsertIgnoreSyntax = false
 	opts.SupportsConflictTarget = false
-	opts.SupportsWithCTE = false
+	opts.SupportsWithCTE = true
 	opts.SupportsWithCTERecursive = false
 	opts.SupportsDistinctOn = false
-	opts.SupportsWindowFunction = false
+	opts.SupportsWindowFunction = true
 	opts.SurroundLimitWithParentheses = true
 
 	opts.PlaceHolderFragment = []byte("@p")
