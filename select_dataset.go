@@ -383,6 +383,11 @@ func (sd *SelectDataset) ForShare(waitOption exp.WaitOption, of ...exp.Identifie
 	return sd.withLock(exp.ForShare, waitOption, of...)
 }
 
+// Removes lock clause. See examples.
+func (sd *SelectDataset) ClearLock() *SelectDataset {
+	return sd.copy(sd.clauses.SetLock(nil))
+}
+
 func (sd *SelectDataset) withLock(strength exp.LockStrength, option exp.WaitOption, of ...exp.IdentifierExpression) *SelectDataset {
 	return sd.copy(sd.clauses.SetLock(exp.NewLock(strength, option, of...)))
 }
